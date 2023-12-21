@@ -1,6 +1,6 @@
 import express from "express";
 const app = express();
-const port = 3000; // Оберіть порт, на якому буде працювати сервер
+const port = process.env.PORT || 3000;
 
 // Маршрут головної сторінки
 app.get("/", (req, res) => {
