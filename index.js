@@ -1,23 +1,29 @@
-import express from "express";
-const app = express();
+const http = require("http");
 const port = process.env.PORT || 3000;
 
-// Маршрут головної сторінки
-app.get("/", (req, res) => {
-  res.send("Це головна сторінка!");
-});
+// Функція обробки маршрутів
+function handleRequest(req, res) {
+  const url = req.url;
 
-// Маршрут для /about
-app.get("/about", (req, res) => {
-  res.send('Це сторінка "Про нас".');
-});
+  if (url === "/") {
+    res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8" });
+    res.end("Це головна сторінка!");
+  } else if (url === "/about") {
+    res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8" });
+    res.end('Це сторінка "Про нас".');
+  } else if (url === "/contact") {
+    res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8" });
+    res.end('Це сторінка "Контакти".');
+  } else {
+    res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+    res.end("Сторінку не знайдено");
+  }
+}
 
-// Маршрут для /contact
-app.get("/contact", (req, res) => {
-  res.send('Це сторінка "Контакти".');
-});
+// Створити сервер
+const server = http.createServer(handleRequest);
 
-// Слухати запити на вибраному порту
-app.listen(port, () => {
+// Слухати на заданому порті
+server.listen(port, () => {
   console.log(`Сервер запущено на порті ${port}`);
 });
