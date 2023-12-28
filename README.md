@@ -1,1 +1,1 @@
-Go to https://kpi-node-k37ramqtx-llo3itib4iks-projects.vercel.app/ to open the application
+Go to https://kpi-node-js.vercel.app/ to open the application
