@@ -1,1 +1,1 @@
-Go to https://kpi-nodejs-c820e0432aa2.herokuapp.com/ to open the application
+Go to https://kpi-node-k37ramqtx-llo3itib4iks-projects.vercel.app/ to open the application
