@@ -1,6 +1,30 @@
 import http from "http";
 import { parse } from "url";
+import querystring from "querystring";
+import { parseString } from 'xml2js';
 const port = process.env.PORT || 3000;
+
+const contentTypes = { // типи даних які може приймати сервер
+  json: "application/json",
+  xml: "application/xml",
+  urlencode: "application/x-www-form-urlencoded"
+};
+
+function parseBody(content, type){ // перетворення даних для подальшої роботи з ними
+  if (type === contentTypes.urlencode){ // якщо дані передані в url
+    return querystring.parse(content);
+  } else if (type === contentTypes.xml) { // якщо передано XML
+    parseString(content, (err, result) => {
+      if (err) {
+        console.error('Помилка при розборі XML:', err);
+        return;
+      }
+      return result;
+    });
+  } else { // якщо JSON або інший
+    return JSON.parse(content);
+  }
+};
 
 // Функція обробки маршрутів
 function handleRequest(req, res) {
@@ -9,25 +33,17 @@ function handleRequest(req, res) {
   const method = req.method.toLowerCase();
   const queryParams = parsedUrl.query;
 
-  let data = {
+  let data = { // створення об'єкту зі всіма даними запиту на сервер
     path,
     method,
     queryParams,
-    payload: '',
+    payload: parseBody(req.body, req.headers["content-type"]),
     headers: req.headers,
   };
 
-  const chosenHandler = router[path] || router['not_found'];
+  const chosenHandler = router[path] || router['not_found']; // знайти потрібний обробник або повернути інформацію що сторінка не знайдена
   chosenHandler(data, (statusCode = 200, payload = {}, contentType = "application/json") => {
-    const contentTypes = {
-      text: "text/plain; charset=utf-8",
-      json: "application/json",
-      xml: "application/xml",
-      formdata: "multipart/form-data",
-      urlencode: "application/x-www-form-urlencoded",
-    };
-
-    res.setHeader("Content-Type", contentTypes[contentType] || "application/json");
+    res.setHeader("Content-Type", contentType);
     res.writeHead(statusCode);
     res.end(payload);
   });
@@ -36,7 +52,7 @@ function handleRequest(req, res) {
 const handlers = {};
 
 handlers.root = (data, callback) => {
-  callback(200, "Це головна сторінка", "text");
+  callback(200, "Це головна сторінка", "text/plain; charset=utf-8");
 };
 
 handlers.sample = (data, callback) => {
@@ -93,13 +109,13 @@ handlers.sample = (data, callback) => {
 };
 
 handlers.notFound = (data, callback) => {
-  callback(404, "Сторінка не знайдена", "text");
+  callback(404, "Сторінка не знайдена", "text/plain; charset=utf-8");
 };
 
 // Виклик функцій-обробників відповідно до маршрутів
 const router = {
   "": handlers.root, // обробка маршруту головної сторінки
-  sample: handlers.sample, // 
+  test: handlers.test, // обробка тестового маршруту
   not_found: handlers.notFound // обробка випадку, коли сторінка не знайдена
 };
 
