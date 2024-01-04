@@ -9,6 +9,8 @@ const contentTypes = { // типи даних які може приймати �
 };
 
 function parseBody(content, type){ // перетворення даних для подальшої роботи з ними
+  console.log(content);
+  console.log(type);
   if (type === contentTypes.urlencode){ // якщо дані передані в url
     return querystring.parse(content);
   } else if (type === contentTypes.json){ // якщо JSON
