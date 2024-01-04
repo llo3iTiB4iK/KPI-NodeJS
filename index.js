@@ -77,7 +77,7 @@ handlers.test = (data, callback) => {
     if (data.method === "post") { // якщо метод post, то повернути відповідне повідомлення та дані у JSON форматі
       const response = {
         message: "Ви відправили POST запит",
-        data: data.payload ? JSON.parse(data.payload) : {},
+        data: data.payload ? data.payload : {},
       };
       callback(200, JSON.stringify(response), "application/json");
     } else if (data.method === "get") { // якщо метод get, то повернути відповідне повідомлення у XML форматі
