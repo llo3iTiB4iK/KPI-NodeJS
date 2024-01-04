@@ -21,7 +21,7 @@ function handleRequest(req, res) {
   const chosenHandler = router[path] || handlers.notFound;
   chosenHandler(data, (statusCode = 200, payload = {}, contentType = "application/json") => {
     const contentTypes = {
-      text: "text/plain",
+      text: "text/plain; charset=utf-8",
       json: "application/json",
       xml: "application/xml",
       formdata: "multipart/form-data",
