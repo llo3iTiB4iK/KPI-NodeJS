@@ -8,7 +8,6 @@ const contentTypes = { // типи даних які може приймати �
 };
 
 function parseBody(content, type, urlParams){ // перетворення даних для подальшої роботи з ними
-  console.log(urlParams);
   if (type === contentTypes.urlencode){ // якщо дані передані в url
     return urlParams;
   } else if (type === contentTypes.json){ // якщо JSON
