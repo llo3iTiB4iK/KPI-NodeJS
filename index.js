@@ -60,6 +60,13 @@ function handleRequest(req, res) {
 
 const handlers = {};
 
+handlers.root = (data, callback) => {
+  const response = {
+    message: "This is the root route",
+  };
+  callback(200, response);
+};
+
 handlers.sample = (data, callback) => {
   const acceptableMethods = ["post", "get", "options"];
 
@@ -97,6 +104,7 @@ handlers.notFound = (data, callback) => {
 };
 
 const router = {
+  "": handlers.root,
   sample: handlers.sample,
 };
 
