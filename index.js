@@ -10,37 +10,26 @@ function handleRequest(req, res) {
   const method = req.method.toLowerCase();
   const queryParams = parsedUrl.query;
 
-  const decoder = new StringDecoder("utf-8");
-  let buffer = "";
+  let data = {
+    path,
+    method,
+    queryParams,
+    payload: '',
+    headers: req.headers,
+  };
 
-  req.on("data", (data) => {
-    buffer += decoder.write(data);
-  });
-
-  req.on("end", () => {
-    buffer += decoder.end();
-
-    const data = {
-      path,
-      method,
-      queryParams,
-      payload: buffer,
-      headers: req.headers,
+  const chosenHandler = router[path] || handlers.notFound;
+  chosenHandler(data, (statusCode = 200, payload = {}, contentType = "application/json") => {
+    const contentTypes = {
+      json: "application/json",
+      xml: "application/xml",
+      formdata: "multipart/form-data",
+      urlencode: "application/x-www-form-urlencoded",
     };
 
-    const chosenHandler = router[path] || handlers.notFound;
-    chosenHandler(data, (statusCode = 200, payload = {}, contentType = "application/json") => {
-      const contentTypes = {
-        json: "application/json",
-        xml: "application/xml",
-        formdata: "multipart/form-data",
-        urlencode: "application/x-www-form-urlencoded",
-      };
-
-      res.setHeader("Content-Type", contentTypes[contentType] || "application/json");
-      res.writeHead(statusCode);
-      res.end(payload);
-    });
+    res.setHeader("Content-Type", contentTypes[contentType] || "application/json");
+    res.writeHead(statusCode);
+    res.end(payload);
   });
 }
 
