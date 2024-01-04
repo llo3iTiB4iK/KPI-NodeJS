@@ -89,3 +89,22 @@ const server = http.createServer(handleRequest);
 server.listen(port, () => {
   console.log(`Сервер запущено на порті ${port}`);
 });
+
+// Опрацьовувати сигнали завершення роботи сервера
+process.on('SIGTERM', () => {
+  shutDown();
+});
+
+process.on('SIGINT', () => {
+  shutDown();
+});
+
+function shutDown() {
+  console.log('Зупинка сервера...');
+
+  // Закрити сервер
+  listener.close(() => {
+    console.log('Сервер зупинено.');
+    process.exit(0);
+  });
+}
