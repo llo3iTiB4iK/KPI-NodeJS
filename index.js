@@ -39,7 +39,7 @@ function handleRequest(req, res) {
 
       res.setHeader("Content-Type", contentTypes[contentType] || "application/json");
       res.writeHead(statusCode);
-      res.end(JSON.stringify(payload));
+      res.end(payload);
     });
   });
 }
@@ -107,7 +107,7 @@ handlers.sample = (data, callback) => {
 };
 
 handlers.notFound = (data, callback) => {
-  callback(404, { message: "Page not found" }, "text/plain; charset=utf-8");
+  callback(404, { message: "Page not found" }, "text/plain");
 };
 
 const router = {
