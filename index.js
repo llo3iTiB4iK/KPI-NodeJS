@@ -48,43 +48,18 @@ handlers.root = (data, callback) => {
 };
 
 handlers.test = (data, callback) => {
-  const acceptableMethods = ["post", "get", "options"];
-  if (acceptableMethods.indexOf(data.method) === -1) {
+  const acceptableMethods = ["post", "get", "options"]; // дозволені методи
+  if (acceptableMethods.indexOf(data.method) === -1) { // якщо метод запиту не серед дозволених, повернути повідмлення про це
     callback(405, "Метод не підтримується", "text/plain; charset=utf-8");
-  } else {
-    if (data.method === "post") {
-      // Handle POST request
-      // Example:
+  } else { // якщо метод запиту дозволений, провести подальшу обробку
+    if (data.method === "post") { // якщо метод post, то повернути відповідне повідомлення та дані
       const response = {
-        message: "This is a POST request",
+        message: "Ви відправили POST запит",
         data: data.payload ? JSON.parse(data.payload) : {},
-      };  
-      let contentType = "application/json"; // Default content type for JSON response  
-      if (data.headers["content-type"] === "application/xml") {
-        // Return XML response
-        const xmlResponse = `<message>This is a POST request</message>`;
-        contentType = "application/xml";
-        callback(200, xmlResponse, contentType);
-      } else if (data.headers["content-type"] === "multipart/form-data") {
-        // Return formdata response
-        const formdataResponse = "Field1=Value1&Field2=Value2";
-        contentType = "application/x-www-form-urlencoded";
-        callback(200, formdataResponse, contentType);
-      } else {
-        // Return JSON response by default
-        callback(200, response, contentType);
-      }
-    } else if (data.method === "get") {
-      // Handle GET request
-      // Example:
-      const response = {
-        message: "This is a GET request",
       };
-
-      // Return XML response for GET request
-      const xmlResponse = `<message>This is a GET request</message>`;
-      const contentType = "application/xml";
-      callback(200, xmlResponse, contentType);
+      callback(200, response, "application/json");
+    } else if (data.method === "get") { // якщо метод get, то повернути відповідне повідомлення у XML форматі
+      callback(200, `<message>Ви відправили GET запит</message>`, "application/x-www-form-urlencoded");
     } else if (data.method === "options") {
       // Handle OPTIONS request
       // Example:
