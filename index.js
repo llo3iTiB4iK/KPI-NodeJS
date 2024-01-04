@@ -34,10 +34,10 @@ function handleRequest(req, res) {
   };
 
   const chosenHandler = router[path] || router['not_found']; // знайти потрібний обробник або повернути інформацію що сторінка не знайдена
-  chosenHandler(data, (statusCode = 200, payload = {}, contentType = "application/json") => {
-    res.setHeader("Content-Type", contentType);
-    res.writeHead(statusCode);
-    res.end(payload);
+  chosenHandler(data, (statusCode = 200, payload = {}, contentType = "application/json") => { // викликати потрібний обробник і ...
+    res.setHeader("Content-Type", contentType); // встановити заголовок з типом даних
+    res.writeHead(statusCode); // встановити статус відповіді
+    res.end(payload); // відправити відповідь, додавши до неї дані, які користувач має отримати
   });
 }
 
@@ -47,20 +47,19 @@ handlers.root = (data, callback) => {
   callback(200, "Це головна сторінка", "text/plain; charset=utf-8");
 };
 
-handlers.sample = (data, callback) => {
+handlers.test = (data, callback) => {
   const acceptableMethods = ["post", "get", "options"];
-
-  if (acceptableMethods.indexOf(data.method) > -1) {
+  if (acceptableMethods.indexOf(data.method) === -1) {
+    callback(405, "Метод не підтримується", "text/plain; charset=utf-8");
+  } else {
     if (data.method === "post") {
       // Handle POST request
       // Example:
       const response = {
         message: "This is a POST request",
         data: data.payload ? JSON.parse(data.payload) : {},
-      };
-
-      let contentType = "application/json"; // Default content type for JSON response
-
+      };  
+      let contentType = "application/json"; // Default content type for JSON response  
       if (data.headers["content-type"] === "application/xml") {
         // Return XML response
         const xmlResponse = `<message>This is a POST request</message>`;
@@ -95,10 +94,8 @@ handlers.sample = (data, callback) => {
       const contentType = "application/json";
       callback(200, response, contentType);
     }
-  } else {
-    callback(405); // Method Not Allowed
   }
-};
+}
 
 handlers.notFound = (data, callback) => {
   callback(404, "Сторінка не знайдена", "text/plain; charset=utf-8");
