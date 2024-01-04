@@ -1,6 +1,5 @@
 import http from "http";
 import { parse } from "url";
-import querystring from "querystring";
 const port = process.env.PORT || 3000;
 
 const contentTypes = { // типи даних які може приймати сервер
@@ -9,10 +8,9 @@ const contentTypes = { // типи даних які може приймати �
 };
 
 function parseBody(content, type){ // перетворення даних для подальшої роботи з ними
-  console.log(content);
-  console.log(type);
+  console.log(queryParams);
   if (type === contentTypes.urlencode){ // якщо дані передані в url
-    return querystring.parse(content);
+    return queryParams;
   } else if (type === contentTypes.json){ // якщо JSON
     return JSON.parse(content);
   } else { // інакше
@@ -22,10 +20,10 @@ function parseBody(content, type){ // перетворення даних для
 
 // Функція обробки маршрутів
 function handleRequest(req, res) {
-  const parsedUrl = parse(req.url, true);
-  const path = parsedUrl.pathname.replace(/^\/+|\/+$/g, "");
-  const method = req.method.toLowerCase();
-  const queryParams = parsedUrl.query;
+  const parsedUrl = parse(req.url, true); // розбиваємо url
+  const path = parsedUrl.pathname.replace(/^\/+|\/+$/g, ""); // отримуємо шлях запиту
+  const method = req.method.toLowerCase(); // отримуємо метод запиту
+  const queryParams = parsedUrl.query; // отримуємо
 
   let body = '';
   req.on('data', (chunk) => {
@@ -40,27 +38,13 @@ function handleRequest(req, res) {
       payload: parseBody(body, req.headers["content-type"]),
       headers: req.headers,
     };
-    const chosenHandler = router[path] || router['not_found'];
-    chosenHandler(data, (statusCode = 200, payload = {}, contentType = "application/json") => {
-      res.setHeader("Content-Type", contentType);
-      res.writeHead(statusCode);
-      res.end(payload);
+    const chosenHandler = router[path] || router['not_found']; // знайти потрібний обробник або повернути інформацію що сторінка не знайдена
+    chosenHandler(data, (statusCode = 200, payload = {}, contentType = "application/json") => { // викликати потрібний обробник і ...
+      res.setHeader("Content-Type", contentType); // встановити заголовок з типом даних
+      res.writeHead(statusCode); // встановити статус відповіді
+      res.end(payload); // відправити відповідь, додавши до неї дані, які користувач має отримати
     });
   });
-  /*let data = { // створення об'єкту зі всіма даними запиту на сервер
-    path,
-    method,
-    queryParams,
-    payload: parseBody(req.body, req.headers["content-type"]),
-    headers: req.headers,
-  };
-
-  const chosenHandler = router[path] || router['not_found']; // знайти потрібний обробник або повернути інформацію що сторінка не знайдена
-  chosenHandler(data, (statusCode = 200, payload = {}, contentType = "application/json") => { // викликати потрібний обробник і ...
-    res.setHeader("Content-Type", contentType); // встановити заголовок з типом даних
-    res.writeHead(statusCode); // встановити статус відповіді
-    res.end(payload); // відправити відповідь, додавши до неї дані, які користувач має отримати
-  });*/  
 }
 
 const handlers = {};
