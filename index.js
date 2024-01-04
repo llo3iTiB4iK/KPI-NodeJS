@@ -1,6 +1,5 @@
 import http from "http";
 import { parse } from "url";
-import { StringDecoder } from "string_decoder";
 const port = process.env.PORT || 3000;
 
 // Функція обробки маршрутів
@@ -18,7 +17,7 @@ function handleRequest(req, res) {
     headers: req.headers,
   };
 
-  const chosenHandler = router[path] || handlers.notFound;
+  const chosenHandler = router[path] || router[not_found];
   chosenHandler(data, (statusCode = 200, payload = {}, contentType = "application/json") => {
     const contentTypes = {
       text: "text/plain; charset=utf-8",
@@ -94,12 +93,14 @@ handlers.sample = (data, callback) => {
 };
 
 handlers.notFound = (data, callback) => {
-  callback(404, { message: "Page not found" }, "text/plain");
+  callback(404, "Page not found", "text");
 };
 
+// Виклик функцій-обробників відповідно до маршрутів
 const router = {
   "": handlers.root,
   sample: handlers.sample,
+  not_found: handlers.notFound
 };
 
 // Створити сервер
