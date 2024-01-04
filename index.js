@@ -1,26 +1,16 @@
 import http from "http";
 import { parse } from "url";
 import querystring from "querystring";
-import { parseString } from 'xml2js';
 const port = process.env.PORT || 3000;
 
 const contentTypes = { // типи даних які може приймати сервер
   json: "application/json",
-  xml: "application/xml",
   urlencode: "application/x-www-form-urlencoded"
 };
 
 function parseBody(content, type){ // перетворення даних для подальшої роботи з ними
   if (type === contentTypes.urlencode){ // якщо дані передані в url
     return querystring.parse(content);
-  } else if (type === contentTypes.xml) { // якщо передано XML
-    parseString(content, (err, result) => {
-      if (err) {
-        console.error('Помилка при розборі XML:', err);
-        return;
-      }
-      return result;
-    });
   } else { // якщо JSON або інший
     return JSON.parse(content);
   }
