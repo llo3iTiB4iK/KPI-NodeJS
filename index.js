@@ -36,10 +36,7 @@ function handleRequest(req, res) {
 const handlers = {};
 
 handlers.root = (data, callback) => {
-  const response = {
-    message: "This is the root route",
-  };
-  callback(200, response, "text/plain");
+  callback(200, "Це головна сторінка", "text/plain");
 };
 
 handlers.sample = (data, callback) => {
