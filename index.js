@@ -42,20 +42,6 @@ function handleRequest(req, res) {
       res.end(JSON.stringify(payload));
     });
   });
-
-  /*if (url === "/") {
-    res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8" });
-    res.end("Це головна сторінка!");
-  } else if (url === "/about") {
-    res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8" });
-    res.end('Це сторінка "Про нас".');
-  } else if (url === "/contact") {
-    res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8" });
-    res.end('Це сторінка "Контакти".');
-  } else {
-    res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
-    res.end("Сторінку не знайдено");
-  }*/
 }
 
 const handlers = {};
@@ -100,7 +86,7 @@ handlers.sample = (data, callback) => {
 };
 
 handlers.notFound = (data, callback) => {
-  callback(404, { message: "Page not found" });
+  callback(404, { "Content-Type": "text/plain; charset=utf-8", message: "Page not found" });
 };
 
 const router = {
