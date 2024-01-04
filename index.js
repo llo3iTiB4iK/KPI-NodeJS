@@ -7,10 +7,10 @@ const contentTypes = { // типи даних які може приймати �
   urlencode: "application/x-www-form-urlencoded"
 };
 
-function parseBody(content, type){ // перетворення даних для подальшої роботи з ними
-  console.log(queryParams);
+function parseBody(content, type, urlParams){ // перетворення даних для подальшої роботи з ними
+  console.log(urlParams);
   if (type === contentTypes.urlencode){ // якщо дані передані в url
-    return queryParams;
+    return urlParams;
   } else if (type === contentTypes.json){ // якщо JSON
     return JSON.parse(content);
   } else { // інакше
@@ -35,7 +35,7 @@ function handleRequest(req, res) {
       path,
       method,
       queryParams,
-      payload: parseBody(body, req.headers["content-type"]),
+      payload: parseBody(body, req.headers["content-type"], queryParams),
       headers: req.headers,
     };
     const chosenHandler = router[path] || router['not_found']; // знайти потрібний обробник або повернути інформацію що сторінка не знайдена
