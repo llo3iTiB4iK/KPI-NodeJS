@@ -52,22 +52,16 @@ handlers.test = (data, callback) => {
   if (acceptableMethods.indexOf(data.method) === -1) { // якщо метод запиту не серед дозволених, повернути повідмлення про це
     callback(405, "Метод не підтримується", "text/plain; charset=utf-8");
   } else { // якщо метод запиту дозволений, провести подальшу обробку
-    if (data.method === "post") { // якщо метод post, то повернути відповідне повідомлення та дані
+    if (data.method === "post") { // якщо метод post, то повернути відповідне повідомлення та дані у JSON форматі
       const response = {
         message: "Ви відправили POST запит",
         data: data.payload ? JSON.parse(data.payload) : {},
       };
       callback(200, response, "application/json");
     } else if (data.method === "get") { // якщо метод get, то повернути відповідне повідомлення у XML форматі
-      callback(200, `<message>Ви відправили GET запит</message>`, "application/x-www-form-urlencoded");
+      callback(200, `<message>Ви відправили GET запит</message>`, "application/xml");
     } else if (data.method === "options") {
-      // Handle OPTIONS request
-      // Example:
-      const response = {
-        message: "This is an OPTIONS request",
-      };
-      const contentType = "application/json";
-      callback(200, response, contentType);
+      callback(200, "Ви відправили OPTIONS запит", "text/plain; charset=utf-8");
     }
   }
 }
