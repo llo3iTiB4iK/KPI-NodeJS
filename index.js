@@ -29,7 +29,7 @@ function handleRequest(req, res) {
 
     res.setHeader("Content-Type", contentTypes[contentType] || "application/json");
     res.writeHead(statusCode);
-    res.end(payload);
+    res.end(JSON.stringify(payload));
   });
 }
 
