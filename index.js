@@ -39,7 +39,7 @@ handlers.root = (data, callback) => {
   const response = {
     message: "This is the root route",
   };
-  callback(200, response);
+  callback(200, response, "text/plain");
 };
 
 handlers.sample = (data, callback) => {
