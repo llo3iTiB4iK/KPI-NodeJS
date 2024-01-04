@@ -17,7 +17,7 @@ function handleRequest(req, res) {
     headers: req.headers,
   };
 
-  const chosenHandler = router[path] || router[not_found];
+  const chosenHandler = router[path] || router['not_found'];
   chosenHandler(data, (statusCode = 200, payload = {}, contentType = "application/json") => {
     const contentTypes = {
       text: "text/plain; charset=utf-8",
