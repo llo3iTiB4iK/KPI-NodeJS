@@ -37,7 +37,7 @@ function handleRequest(req, res) {
 const handlers = {};
 
 handlers.root = (data, callback) => {
-  callback(200, "Це головна сторінка", "text/plain");
+  callback(200, "Це головна сторінка", "text");
 };
 
 handlers.sample = (data, callback) => {
