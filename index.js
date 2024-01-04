@@ -93,14 +93,14 @@ handlers.sample = (data, callback) => {
 };
 
 handlers.notFound = (data, callback) => {
-  callback(404, "Page not found", "text");
+  callback(404, "Сторінка не знайдена", "text");
 };
 
 // Виклик функцій-обробників відповідно до маршрутів
 const router = {
-  "": handlers.root,
-  sample: handlers.sample,
-  not_found: handlers.notFound
+  "": handlers.root, // обробка маршруту головної сторінки
+  sample: handlers.sample, // 
+  not_found: handlers.notFound // обробка випадку, коли сторінка не знайдена
 };
 
 // Створити сервер
