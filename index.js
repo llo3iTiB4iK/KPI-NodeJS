@@ -33,9 +33,15 @@ function handleRequest(req, res) {
   });
 
   req.on('end', () => { // Опрацьовуємо body після отримання всіх даних
-    const parsedBody = parseBody(body, req.headers["content-type"]);
+    let data = { // створення об'єкту зі всіма даними запиту на сервер
+      path,
+      method,
+      queryParams,
+      payload: parseBody(body, req.headers["content-type"]),
+      headers: req.headers,
+    };
     const chosenHandler = router[path] || router['not_found'];
-    chosenHandler({ ...data, payload: parsedBody }, (statusCode = 200, payload = {}, contentType = "application/json") => {
+    chosenHandler(data, (statusCode = 200, payload = {}, contentType = "application/json") => {
       res.setHeader("Content-Type", contentType);
       res.writeHead(statusCode);
       res.end(payload);
