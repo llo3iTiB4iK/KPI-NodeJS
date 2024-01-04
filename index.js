@@ -57,7 +57,7 @@ handlers.test = (data, callback) => {
         message: "Ви відправили POST запит",
         data: data.payload ? JSON.parse(data.payload) : {},
       };
-      callback(200, response, "application/json");
+      callback(200, JSON.stringify(response), "application/json");
     } else if (data.method === "get") { // якщо метод get, то повернути відповідне повідомлення у XML форматі
       callback(200, `<message>Ви відправили GET запит</message>`, "application/xml");
     } else if (data.method === "options") {
