@@ -107,7 +107,7 @@ handlers.sample = (data, callback) => {
 };
 
 handlers.notFound = (data, callback) => {
-  callback(404, { message: "Page not found" }, "Content-Type": "text/plain; charset=utf-8");
+  callback(404, { message: "Page not found" }, "text/plain; charset=utf-8");
 };
 
 const router = {
