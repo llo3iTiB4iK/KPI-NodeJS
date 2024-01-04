@@ -27,7 +27,21 @@ function handleRequest(req, res) {
   const method = req.method.toLowerCase();
   const queryParams = parsedUrl.query;
 
-  let data = { // створення об'єкту зі всіма даними запиту на сервер
+  let body = '';
+  req.on('data', (chunk) => {
+    body += chunk.toString(); // Збираємо дані з тіла запиту
+  });
+
+  req.on('end', () => { // Опрацьовуємо body після отримання всіх даних
+    const parsedBody = parseBody(body, req.headers["content-type"]);
+    const chosenHandler = router[path] || router['not_found'];
+    chosenHandler({ ...data, payload: parsedBody }, (statusCode = 200, payload = {}, contentType = "application/json") => {
+      res.setHeader("Content-Type", contentType);
+      res.writeHead(statusCode);
+      res.end(payload);
+    });
+  });
+  /*let data = { // створення об'єкту зі всіма даними запиту на сервер
     path,
     method,
     queryParams,
@@ -40,7 +54,7 @@ function handleRequest(req, res) {
     res.setHeader("Content-Type", contentType); // встановити заголовок з типом даних
     res.writeHead(statusCode); // встановити статус відповіді
     res.end(payload); // відправити відповідь, додавши до неї дані, які користувач має отримати
-  });
+  });*/  
 }
 
 const handlers = {};
